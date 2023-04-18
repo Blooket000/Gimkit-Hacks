@@ -1,0 +1,13 @@
+{
+	"devDependencies": {
+		"rollup": "^3.20.6",
+		"typescript": "^5.0.4",
+		"tslib": "^2.5.0",
+		"@rollup/plugin-typescript": "^11.1.0"
+	},
+	"type": "module",
+	"scripts": {
+		"build": "rollup -c",
+		"dev": "rollup -c -w"
+	}
+}
