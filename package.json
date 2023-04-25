@@ -1,9 +1,10 @@
 {
 	"devDependencies": {
+		"@rollup/plugin-terser": "^0.4.1",
+		"@rollup/plugin-typescript": "^11.1.0",
 		"rollup": "^3.20.6",
-		"typescript": "^5.0.4",
 		"tslib": "^2.5.0",
-		"@rollup/plugin-typescript": "^11.1.0"
+		"typescript": "^5.0.4"
 	},
 	"type": "module",
 	"scripts": {
