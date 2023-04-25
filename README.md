@@ -1,7 +1,10 @@
 # Gimkit Utility
 An open sourced utility for interacting with Gimkit's game socket and API. The core scripts behind the features have been developed and continually maintained since 2020.
 
-## General Features
+## Official Support Server: https://discord.gg/gimkit
+<br>
+
+# Features
 - Auto updating bookmarklet requiring no Inspect Element or local override shenanigans
 - Simple GUI to control mode-specific features ~~with support for binding keybinds~~
 - ~~Built-in game flooder and bot controller~~ (Coming soon)
@@ -28,6 +31,8 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 ### Notes
 - Visual answer indicators read the UI to determine the question that is being asked. This means that questions that have identical text can be detected incorrectly and consequently render the wrong answer.
 - Not all modes are supported yet _with this script_, however features have already been developed for every mode on Gimkit and will gradually be migrated to this repository
+
+<br>
 
 # Usage
 The script must be executed before joining the game to receive the game state information. As Gimkit now freezes the WebSocket prototype when the page loads, the script will automatically open a new window with the script executing before the page loads bypassing the freeze.
