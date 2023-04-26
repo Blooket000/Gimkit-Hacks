@@ -78,6 +78,14 @@ export type GameQuestion = {
   source: string;
   __v: number;
 }
+export type ClassicPlayer = {
+  id: string;
+  name: string;
+  theme: string;
+  activePowerups: string[];
+  balance: number;
+}
+
 export type PardyState = {
   type: string;
   value: {
@@ -186,7 +194,7 @@ export type WSData = {
   ];
   PARDY_MODE_STATE?: [ PardyState ];
   PERSONAL_ACTIVE_POWERUPS?: string[];
-  PLAYER_LEADERBOARD?: any[];
+  PLAYER_LEADERBOARD?: ClassicPlayer[];
   PLAYER_QUESTION_LIST?: {
     questionList: string[];
     questionIndex: number;

@@ -20,7 +20,7 @@ export const send2D = (data: any) => {
   socket()!.send(data);
 }
 export const fakeRecv2D = (type: string, data: any) => {
-  const e = new Event("message");
+  const e = new Event("message") as any;
   e.data = colyseusEncode(type, data);
   socket()!.dispatchEvent(e);
 }
@@ -34,14 +34,14 @@ const onMessage = (msg: any) => {
   if("Blockly" in window) return onMessage2D(msg);
   const dataB4 = blueboatDecode(msg.data);
   console.warn(dataB4);
+  if(dataB4.toString() === "3") setTimeout(() => send("PLAYER_LEADERBOARD_REQUESTED", undefined), 500);
   if(typeof dataB4 !== "object") return;
-  if(dataB4.toString() === "3") setTimeout(() => send("PLAYER_LEADERBOARD_REQUESTED"), 500);
   if(dataB4.type !== 2) return;
   
   const { data, key } = dataB4.data[1];
   switch(key) {
     case "UPDATED_PLAYER_LEADERBOARD":
-      WebSocketData["PLAYER_LEADERBOARD"] = data.terms;
+      WebSocketData["PLAYER_LEADERBOARD"] = data.items;
       break;
     case "PLAYER_JOINS_STATIC_STATE":
       WebSocketData["GAME_STATE"] = data;

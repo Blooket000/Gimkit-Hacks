@@ -4,7 +4,7 @@
 	"updateURL": "https://undercovergoose.github.io/gimkit/output/main-userscript.user.js",
 	"downloadURL": "https://undercovergoose.github.io/gimkit/output/main-userscript.user.js",
 	"author": "UndercoverGoose (https://github.com/UndercoverGoose)",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "An open sourced utility for interacting with Gimkit's game socket and API.",
 	"run-at": "document-start",
 	"icon": "https://www.gimkit.com/favicon.png",

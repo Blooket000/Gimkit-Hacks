@@ -99,11 +99,18 @@ const imposter = {
   },
   "Spam Host": {
     type: "toggle", value: false,
-    action: () => {}
+    action: async function() {
+      send("UPGRADE_PURCHASED", {
+        upgradeName: "Money Per Question",
+        level: 1
+      });
+      await sleep(250);
+      if (this.value) this.action.bind(this)();
+    }
   },
 
-  // "Misc": classic["Misc"],
-  // "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
+  "Misc": classic["Misc"],
+  "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
   // "Kick Player": classic["Kick Player"]
 }
 

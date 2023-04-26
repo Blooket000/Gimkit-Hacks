@@ -17,10 +17,6 @@ window.addEventListener("load", _ => {
 
 // window.decode = blueboatDecode;
 // window.encode = blueboatEncode;
-// window.classic = classicOptions;
-// window.default = defaultOptions;
-// window.pardy = pardyOptions;
-// window.imposter = imposterOptions;
 // window.wsdata = WebSocketData;
 // window.render = render;
 
