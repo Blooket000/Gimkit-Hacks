@@ -1,4 +1,4 @@
-import { NavButton, NavCollapse, ToggleList } from "../interfaces/navigator";
+import { NavCollapse, ToggleList } from "../interfaces/navigator";
 import { WebSocketData } from "../websocket";
 import classic, { answerClassicQuestion } from "./classic";
 import { sleep } from '../helpers';

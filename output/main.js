@@ -1292,6 +1292,24 @@
         // }
     };
 
+    var defaultOptions = {
+        "Default": {
+            type: "header"
+        },
+        // "Hold key to open GUI": {
+        //   type: "toggle",
+        //   value: false
+        // },
+        // "Close GUI when button pressed": {
+        //   type: "toggle",
+        //   value: false
+        // },
+        // "Anti REDBOAT": {
+        //   type: "toggle",
+        //   value: true
+        // }
+    };
+
     const pardy = {
         "Answers": classic["Answers"],
         "Auto Answer": {
@@ -1330,30 +1348,6 @@
         "Hidden Answer": classic["Hidden Answer"],
         "Input Answer": classic["Input Answer"],
         // "Misc": classic["Misc"],
-        // "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
-        // "Kick Player": classic["Kick Player"]
-    };
-
-    const imposter = {
-        "Answers": classic["Answers"],
-        "Auto Answer": classic["Auto Answer"],
-        "Auto Answer Config": classic["Auto Answer Config"],
-        "Answer Correctly Once": classic["Answer Correctly Once"],
-        "Highlight Answer": classic["Highlight Answer"],
-        "Hidden Answer": classic["Hidden Answer"],
-        "Input Answer": classic["Input Answer"],
-        // "Imposter": {
-        //   type: "header"
-        // },
-        // "Reveal Imposters": {
-        //   type: "toggle", value: false,
-        //   action: () => {}
-        // },
-        // "Misc": classic["Misc"],
-        // "Spam Host": {
-        //   type: "toggle", value: false,
-        //   action: () => {}
-        // },
         // "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
         // "Kick Player": classic["Kick Player"]
     };
@@ -1494,6 +1488,8 @@
   #${navId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'Baloo 2', cursive;border-radius: 3px;font-size: 19px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
   #${navId}::-webkit-scrollbar {display: none;}
   #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass} {display: block;width: 100%;height: 40px;line-height: 40px;color: white;}
+  #${navId} .${buttonClass}.${disabledClass} {cursor:not-allowed !important;}
+  #${navId} .${buttonClass}.${disabledClass} span {color:#444 !important;}
   #${navId} span.${fullClass} {text-align: center;border-bottom-style: solid;border-bottom-width: 3px;animation: 7s infinite rainbowBC, 7s infinite rainbowC;}
   #${navId} .${optionClass} {position: relative;transition: 0.3s background;}
   #${navId} .${optionClass} span:first-child {color: white;transition: 0.2s color;padding-left: 20px;}
@@ -1516,6 +1512,7 @@
   #${navId} .${sliderClass} input {position: absolute;top: 28px;width: calc(100% - 40px);left: 20px;background: transparent;}
   #${navId} .${sliderClass} input[type="range"]::-moz-range-thumb {height: 17px;width: 8px;border: none;border-radius: 0px;background: #9736FF;cursor: col-resize;}
   #${navId} .${sliderClass} input[type="range"]::-moz-range-track {height: 2.4px;border: none;background: white;border-radius: 0px;}
+  #${navId} #${selectId} {position:absolute;left:0;top:0;width:100%;z-index:100000;background:#000d;}
   @keyframes rainbowBC {
     0% { border-color: red; }
     18% { border-color: orange; }
@@ -1578,11 +1575,27 @@
                     }
                     case "button": {
                         const element = build.button(key, data);
-                        element.addEventListener("click", e => {
+                        const clickEvent = function (e) {
                             if (e.target?.classList.contains("key"))
                                 return;
                             data.action();
-                        });
+                        };
+                        let lastState = null;
+                        if (data.condition)
+                            setInterval(() => {
+                                const newState = data.condition?.();
+                                if (newState !== lastState) {
+                                    lastState = newState;
+                                    element.removeEventListener("click", clickEvent);
+                                    if (newState) {
+                                        element.classList.remove(disabledClass);
+                                        element.addEventListener("click", clickEvent);
+                                    }
+                                    else
+                                        element.classList.add(disabledClass);
+                                }
+                            }, 1000);
+                        element.addEventListener("click", clickEvent);
                         elements.push(element);
                         break;
                     }
@@ -1628,7 +1641,7 @@
         }
     };
 
-    const [navId, styleId] = randomIds(2);
+    const [navId, selectId, styleId] = randomIds(3);
     const pos = [0, 0, 0, 0, false];
     const kc = {
         pinned: false,
@@ -1683,6 +1696,7 @@
             build.nav().style.display = "none";
             kc.bindingKey = false;
         }
+        closeUI();
     });
     window.addEventListener("resize", windowResize);
     window.addEventListener("mouseup", mouseUp);
@@ -1738,19 +1752,143 @@
         }
     });
 
+    const buildUI = () => {
+        if (document.querySelector(`#${selectId}`))
+            return document.querySelector(`#${selectId}`);
+        const ui = document.createElement("div");
+        ui.id = selectId;
+        ui.style.minHeight = document.querySelector(`#${navId}`).scrollHeight + "px";
+        document.querySelector(`#${navId}`)?.appendChild(ui);
+        document.querySelector(`#${navId}`)?.scrollTo(0, 0);
+        return ui;
+    };
+    const closeUI = () => {
+        document.querySelector(`#${selectId}`)?.remove();
+    };
+    function createSelectUI (options, callback) {
+        const ui = buildUI();
+        for (const [key, data] of Object.entries(options)) {
+            const btn = build.button(key, data);
+            btn.addEventListener("click", () => {
+                callback(data._id);
+                closeUI();
+            });
+            ui.appendChild(btn);
+        }
+    }
+
+    const buyItem = async (itemId, targetted) => {
+        if (targetted) {
+            if (!WebSocketData.IMPOSTER_MODE_PEOPLE) {
+                send("IMPOSTER_MODE_REQUEST_PEOPLE");
+                await sleep(500);
+            }
+            createSelectUI(Object.fromEntries(WebSocketData.IMPOSTER_MODE_PEOPLE?.filter(p => !p.votedOff).map(p => [p.name, { type: "button", action: () => { }, _id: p.id }]) ?? []), (_id) => {
+                if (!_id)
+                    return;
+                send("IMPOSTER_MODE_PURCHASE", { item: itemId, on: _id });
+            });
+        }
+        else
+            send("IMPOSTER_MODE_PURCHASE", { item: itemId });
+    };
+    const imposter = {
+        "Answers": classic["Answers"],
+        "Auto Answer": classic["Auto Answer"],
+        "Auto Answer Config": classic["Auto Answer Config"],
+        "Answer Correctly Once": classic["Answer Correctly Once"],
+        "Highlight Answer": classic["Highlight Answer"],
+        "Hidden Answer": classic["Hidden Answer"],
+        "Input Answer": classic["Input Answer"],
+        "Imposter": {
+            type: "header"
+        },
+        "Reveal Imposters": {
+            type: "toggle", value: false,
+            action: () => { }
+        },
+        "Purchase Item": {
+            type: "collapse", elements: {
+                "Private Investigation (7)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "detective",
+                    action: () => {
+                        buyItem("privateInvestigation", true);
+                    }
+                },
+                "Public Investigation (15)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "detective",
+                    action: () => {
+                        buyItem("publicInvestigation", true);
+                    }
+                },
+                "Note Look (7)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "detective",
+                    action: () => {
+                        buyItem("noteViewer", true);
+                    }
+                },
+                "Meeting (10)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "detective",
+                    action: () => {
+                        buyItem("meeting");
+                    }
+                },
+                "Investigation Remover (10)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "imposter",
+                    action: () => {
+                        buyItem("investigationRemover");
+                    }
+                },
+                "Fake Investigation (6)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "imposter",
+                    action: () => {
+                        buyItem("fakeInvestigation", true);
+                    }
+                },
+                "Unclear (15)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "imposter",
+                    action: () => {
+                        buyItem("clearListRemover", true);
+                    }
+                },
+                "Disguise (15)": {
+                    type: "button",
+                    condition: () => WebSocketData.IMPOSTER_MODE_PERSON?.role === "imposter",
+                    action: () => {
+                        buyItem("blendIn");
+                    }
+                }
+            }
+        },
+        "Spam Host": {
+            type: "toggle", value: false,
+            action: () => { }
+        },
+        // "Misc": classic["Misc"],
+        // "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
+        // "Kick Player": classic["Kick Player"]
+    };
+
     const mode = () => { return WebSocketData.GAME_STATE.gameOptions.specialGameType[0]; };
     // needs modified to support 2D
     window.addEventListener("load", _ => {
         render(classic);
     });
-    // window.decode = blueboatDecode;
-    // window.encode = blueboatEncode;
-    // window.classic = classicOptions;
-    // window.default = defaultOptions;
-    // window.pardy = pardyOptions;
-    // window.imposter = imposterOptions;
-    // window.wsdata = WebSocketData;
-    // window.render = render;
+    window.decode = decode$1;
+    window.encode = encode;
+    window.classic = classic;
+    window.default = defaultOptions;
+    window.pardy = pardy;
+    window.imposter = imposter;
+    window.wsdata = WebSocketData;
+    window.render = render;
     sendChannel$1.addEventListener('GAME_STATE', (e) => {
         e.detail;
         switch (mode()) {
