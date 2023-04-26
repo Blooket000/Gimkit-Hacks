@@ -59,12 +59,15 @@ export type GameState = {
   news: string[];
 }
 export type GameQuestion = {
-  type: "mc",
+  type: "mc" | "text";
   position: number;
   isActive: boolean;
   _id: string;
   text: string;
   game: string;
+  /**
+   * type="text" will only have a single index being the correct answer
+   */
   answers: {
     correct: boolean;
     _id: string;
@@ -116,6 +119,28 @@ export type PardyState = {
     value: "ask" | string;
   }
 }
+export type ImposterPerson = {
+  id: string;
+  canNeverBeClear: boolean;
+  markedAsClear: boolean;
+  name: string;
+  role: "detective" | "imposter";
+  votedOff: boolean;
+}
+export interface ImposterSelf extends ImposterPerson {
+  notes: string;
+  blendingIn: boolean;
+  currentVote: string;
+}
+export type ImposterShopItem = {
+  background: string;
+  cost: number;
+  description: string;
+  icon: string;
+  id: "privateInvestigation" | "publicInvestigation" | "meeting" | "noteViewer" |
+    "investigationRemover" | "fakeInvestigation" | "clearListRemover" | "blendIn";
+  name: string;
+}
 
 export type WSData = {
   ws: WebSocket | null;
@@ -136,6 +161,13 @@ export type WSData = {
     groupId: string;
     groupMemberId: string;
   };
+  IMPOSTER_MODE_PEOPLE?: ImposterPerson[];
+  IMPOSTER_MODE_PERSON?: ImposterSelf;
+  IMPOSTER_MODE_REMAINING_IMPOSTERS?: number;
+  IMPOSTER_MODE_REMAINING_INVESTIGATIONS?: number;
+  IMPOSTER_MODE_REMAINING_MEETINGS?: number;
+  IMPOSTER_MODE_SHOP_ITEMS?: ImposterShopItem[];
+  IMPOSTER_MODE_STATUS?: "intro" | "questions" | "voting";
   INCOME_MULTIPLIER?: number;
   LINK_INFO?: {
     id: string;
@@ -159,6 +191,7 @@ export type WSData = {
     questionList: string[];
     questionIndex: number;
   };
+  PURCHASED_POWERUPS?: string[];
   PURCHASED_THEMES?: string[];
   ROOM?: string;
   SCREEN_ATTACK?: {

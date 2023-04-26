@@ -11,6 +11,11 @@ export type NavToggle = {
 export type NavButton = {
   type: "button";
   key?: string;
+  /**
+   * Used internally to identify buttons after click events
+   */
+  _id?: string;
+  condition?: () => boolean;
   keybindId?: string;
   action: () => void | Promise<void>;
 }

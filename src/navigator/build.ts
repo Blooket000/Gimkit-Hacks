@@ -1,6 +1,6 @@
 import { randomId, randomIds } from "../helpers";
 import { NavHeader, NavToggle, NavButton, NavCollapse, NavSlider, NavItem, ToggleList } from "../interfaces/navigator";
-import { navId, styleId, kc as KeyControls, renderData, mouseDown } from "./navigator";
+import { navId, selectId, styleId, kc as KeyControls, renderData, mouseDown } from "./navigator";
 const [ optionClass, toggleClass, enabledClass, disabledClass, fullClass, dragbarClass, collapseClass, tClass, arrowClass, keyClass, buttonClass, openClass, svgClass, sliderClass ] = randomIds(14);
 import { keybinds, bind, unbind } from "../keybinds";
 
@@ -99,6 +99,8 @@ export const build = {
   #${navId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'Baloo 2', cursive;border-radius: 3px;font-size: 19px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
   #${navId}::-webkit-scrollbar {display: none;}
   #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass} {display: block;width: 100%;height: 40px;line-height: 40px;color: white;}
+  #${navId} .${buttonClass}.${disabledClass} {cursor:not-allowed !important;}
+  #${navId} .${buttonClass}.${disabledClass} span {color:#444 !important;}
   #${navId} span.${fullClass} {text-align: center;border-bottom-style: solid;border-bottom-width: 3px;animation: 7s infinite rainbowBC, 7s infinite rainbowC;}
   #${navId} .${optionClass} {position: relative;transition: 0.3s background;}
   #${navId} .${optionClass} span:first-child {color: white;transition: 0.2s color;padding-left: 20px;}
@@ -121,6 +123,7 @@ export const build = {
   #${navId} .${sliderClass} input {position: absolute;top: 28px;width: calc(100% - 40px);left: 20px;background: transparent;}
   #${navId} .${sliderClass} input[type="range"]::-moz-range-thumb {height: 17px;width: 8px;border: none;border-radius: 0px;background: #9736FF;cursor: col-resize;}
   #${navId} .${sliderClass} input[type="range"]::-moz-range-track {height: 2.4px;border: none;background: white;border-radius: 0px;}
+  #${navId} #${selectId} {position:absolute;left:0;top:0;width:100%;z-index:100000;background:#000d;}
   @keyframes rainbowBC {
     0% { border-color: red; }
     18% { border-color: orange; }
@@ -179,10 +182,24 @@ export const build = {
         }
         case "button": {
           const element = build.button(key, data);
-          element.addEventListener("click", e => {
+          const clickEvent = function(e) {
             if((e.target as HTMLDivElement)?.classList.contains("key")) return;
             data.action();
-          })
+          }
+          let lastState = null as unknown as boolean;
+          if(data.condition) setInterval(() => {
+            const newState = data.condition?.() as boolean;
+            if(newState !== lastState) {
+              lastState = newState;
+              element.removeEventListener("click", clickEvent);
+              if(newState) {
+                element.classList.remove(disabledClass);
+                element.addEventListener("click", clickEvent);
+              }
+              else element.classList.add(disabledClass);
+            }
+          }, 1000);
+          element.addEventListener("click", clickEvent);
           elements.push(element);
           break;
         }

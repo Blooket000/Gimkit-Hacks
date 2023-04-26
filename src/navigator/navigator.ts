@@ -2,8 +2,9 @@ import { randomId, randomIds } from "../helpers";
 import { keybinds, bind } from "../keybinds";
 import { NavHeader, NavToggle, NavButton, NavCollapse, NavSlider, NavItem, ToggleList } from "../interfaces/navigator";
 import { build } from "./build";
+import { closeUI as closeSelectUI } from "./select";
 
-const [ navId, styleId ] = randomIds(2);
+const [ navId, selectId, styleId ] = randomIds(3);
 const pos: [number, number, number, number, boolean] = [0, 0, 0, 0, false];
 const kc = {
   pinned: false,
@@ -11,7 +12,7 @@ const kc = {
   boundKey: (key: string) => {}
 }
 let scale = 1, offsetX = 0, offsetY = 0, renderData: ToggleList = {};
-export { navId, styleId, kc, renderData };
+export { navId, selectId, styleId, kc, renderData };
 
 export const render = (options: ToggleList) => {
   renderData = options;
@@ -50,11 +51,12 @@ const mouseMove = e => {
   windowResize();
 }
 window.addEventListener("mousedown", e => {
-  if(Array.from(build.nav().querySelectorAll("*")).includes(e.target as HTMLElement)) return;
+  if(Array.from(build.nav()!.querySelectorAll("*")).includes(e.target as HTMLElement)) return;
   if(!kc.pinned) {
-    build.nav().style.display = "none";
+    (build.nav() as HTMLDivElement)!.style.display = "none";
     kc.bindingKey = false;
   }
+  closeSelectUI();
 });
 window.addEventListener("resize", windowResize);
 window.addEventListener("mouseup", mouseUp);
