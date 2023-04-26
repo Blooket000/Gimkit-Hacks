@@ -1467,8 +1467,8 @@
                 return;
             const style = document.createElement("style");
             style.id = styleId;
-            style.innerHTML = `@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-  #${navId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'VT323', monospace;border-radius: 3px;font-size: 23px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
+            style.innerHTML = ` @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap'); @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+  #${navId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'Baloo 2', cursive;border-radius: 3px;font-size: 19px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
   #${navId}::-webkit-scrollbar {display: none;}
   #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass} {display: block;width: 100%;height: 40px;line-height: 40px;color: white;}
   #${navId} span.${fullClass} {text-align: center;border-bottom-style: solid;border-bottom-width: 3px;animation: 7s infinite rainbowBC, 7s infinite rainbowC;}
@@ -1477,13 +1477,13 @@
   #${navId} .${collapseClass} {transition: 0.3s height;}
   #${navId} .${collapseClass}:not(.${openClass}) {overflow-y: hidden;height: 40px;}
   #${navId} .${collapseClass}.${openClass} {height: auto;}
-  #${navId} .${optionClass}.${toggleClass}.${disabledClass} span:first-child {color: red;}
-  #${navId} .${optionClass}.${toggleClass}.${enabledClass} span:first-child {color: lime;}
+  #${navId} .${optionClass}.${toggleClass}.${disabledClass} span:first-child {color: #f00a;}
+  #${navId} .${optionClass}.${toggleClass}.${enabledClass} span:first-child {color: #1f0e;}
   #${navId} .${optionClass}:hover, #${navId} .${collapseClass}:hover {background: #ffffff20;cursor: pointer;}
   #${navId} .${dragbarClass}:hover {cursor: move;}
   #${navId} .${optionClass} span.${keyClass} {position: absolute;display: block;right: 0px;top: 0px;width: 40px;color: white;background: #ffffff10;text-align: center;margin-right: 7px;}
   #${navId} .${optionClass} span.${keyClass}[keybind-key=""] {color: #00000050;}
-  #${navId} .${collapseClass} span.${arrowClass} {display: inline-block;width: 40px;text-align: center;transition: 0.2s transform;}
+  #${navId} .${collapseClass} span.${arrowClass} {display: inline-block;width: 40px;text-align: center;transition: 0.2s transform;font-family: 'Righteous', cursive;}
   #${navId} .${collapseClass}.${openClass} span.${arrowClass} {transform: rotate(90deg);}
   .${svgClass} {position: absolute;right: 12px;top: 7px;opacity: 0.25;transition: 0.2s opacity;}
   .${svgClass}:hover {opacity: 0.5;cursor: pointer;}
