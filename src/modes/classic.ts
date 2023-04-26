@@ -4,7 +4,7 @@ import { getCorrect, getCorrectIndex, getChoices } from "../parsers/answer";
 import { WebSocketData } from "../websocket";
 import { NavItem, NavToggle, ToggleList } from "../interfaces/navigator";
 
-const answerQuestion = () => {
+export const answerClassicQuestion = () => {
   const firstQ = WebSocketData.GAME_QUESTIONS?.[0] as any;
   send('QUESTION_ANSWERED', {
     questionId: firstQ._id,
@@ -20,7 +20,7 @@ const classic = {
     type: 'toggle', value: false,
     keybindId: "classic_auto_answer",
     action: async function () {
-      answerQuestion();
+      answerClassicQuestion();
       await sleep(classic["Auto Answer Config"].elements["Delay"].value);
       if (this.value) this.action.bind(this)();
     },
@@ -55,7 +55,7 @@ const classic = {
   },
   "Answer Correctly Once": {
     type: "button",
-    action: answerQuestion
+    action: answerClassicQuestion
   },
   "Highlight Answer": {
     type: "toggle", value: false,

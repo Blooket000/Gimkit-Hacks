@@ -111,6 +111,9 @@ export type PardyState = {
     playersAnswered: number;
     playersAnsweredCorrectly: number;
     nameOfFirstPlayerToAnswerCorrectly: string;
+  } | {
+    key: "screen" | "questionStatus" | string;
+    value: "ask" | string;
   }
 }
 
