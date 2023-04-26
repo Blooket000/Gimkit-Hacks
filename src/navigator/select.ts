@@ -19,10 +19,10 @@ export const closeUI = () => {
 export default function(options: {[key: string]: NavButton}, callback: (_id?: string) => void) {
   const ui = buildUI();
   for(const [key, data] of Object.entries(options)) {
-    const btn = build.button(key, data);
+    const btn = build.button(key.replace(/{.+}/gi, ""), data);
     btn.addEventListener("click", () => {
-      callback(data._id);
       closeUI();
+      callback(data._id);
     });
     ui.appendChild(btn);
   }

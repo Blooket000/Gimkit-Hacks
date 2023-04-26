@@ -83,12 +83,12 @@ export const build = {
     return element;
   },
   nav: () => {
-    if(document.querySelector(`#${navId}`)) return document.querySelector(`#${navId}`);
+    if(document.querySelector(`#${navId}`)) return document.querySelector(`#${navId}`) as HTMLDivElement;
     const nav = document.createElement("div");
     nav.id = navId,
     nav.style.display = "none";
     document.body.appendChild(nav);
-    return nav;
+    return nav as HTMLDivElement;
   },
   style: () => {
     const s = document.querySelector(`style#${styleId}`);
@@ -198,7 +198,7 @@ export const build = {
               }
               else element.classList.add(disabledClass);
             }
-          }, 1000);
+          }, 250);
           element.addEventListener("click", clickEvent);
           elements.push(element);
           break;

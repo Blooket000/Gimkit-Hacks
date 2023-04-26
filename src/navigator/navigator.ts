@@ -18,11 +18,12 @@ export const render = (options: ToggleList) => {
   renderData = options;
   build.style();
   const n = build.nav();
-  n.innerHTML = "";
+  n!.innerHTML = "";
   const elements = build.elements(options);
   for(const element of elements) {
     n.appendChild(element);
   }
+  kc.pinned = false;
 }
 const updateScale = (sc: number) => {
   scale = Math.round(sc*10)/10;
@@ -51,9 +52,9 @@ const mouseMove = e => {
   windowResize();
 }
 window.addEventListener("mousedown", e => {
-  if(Array.from(build.nav()!.querySelectorAll("*")).includes(e.target as HTMLElement)) return;
+  if(Array.from(build.nav().querySelectorAll("*")).includes(e.target as HTMLElement)) return;
   if(!kc.pinned) {
-    (build.nav() as HTMLDivElement)!.style.display = "none";
+    build.nav().style.display = "none";
     kc.bindingKey = false;
   }
   closeSelectUI();
