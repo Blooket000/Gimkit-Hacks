@@ -36,6 +36,14 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 
 # Usage
 The script must be executed before joining the game to receive the game state information. As Gimkit now freezes the WebSocket prototype when the page loads, the script will automatically open a new window with the script executing before the page loads bypassing the freeze.
+- Of course, you can try to run the script from [output/main.js](output/main.js) in DevTools before the WebSocket is frozen
+### UserScript
+- Pull the script from [output/main-userscript.user.js](output/main-userscript.user.js) and create a new UserScript in Tampermonkey/Greasemonkey or whatever extension you use for userscripts
+- The script should automatically bypass the WebSocket freeze requiring no new tabs being created
+
+### CORS Bypass Required:
+<details>
+  <summary>These scripts require CORS to be disabled in your browser</summary>
 
 > Paste the following into developer console:
 ```javascript
@@ -51,6 +59,8 @@ The script must be executed before joining the game to receive the game state in
 ```javascript
 javascript:(async()=>{const r=await fetch("https://undercovergoose.github.io/gimkit/output/main-minified.js");const t=await r.text();const w=window.open(location.href,"_blank");w.eval(t);w.focus();})();void 0
 ```
+
+</details>
 
 ### Running from Source
 If you wish to clone the repo and run the script directly from the output folder you can do so by hosting a file server on some port to the repo and changing the URL in the script to `127.0.0.1:8080/output/main-minified.js` replacing the port with the one you are using.
