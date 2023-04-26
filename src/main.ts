@@ -11,7 +11,6 @@ import { sendChannel as keybindsSendChannel } from './keybinds';
 export const mode = () => { return WebSocketData.GAME_STATE!.gameOptions.specialGameType[0] };
 // needs modified to support 2D
 
-document.body.style.background = "#4C1B81";
 window.addEventListener("load", _ => {
   render(classicOptions);
 });

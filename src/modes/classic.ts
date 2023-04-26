@@ -5,7 +5,7 @@ import { WebSocketData } from "../websocket";
 import { NavItem, NavToggle, ToggleList } from "../interfaces/navigator";
 
 export const answerClassicQuestion = () => {
-  const firstQ = WebSocketData.GAME_QUESTIONS?.[0] as any;
+  const firstQ: any = WebSocketData.GAME_QUESTIONS?.[classic["Auto Answer Config"].elements["Question Index"].value] || WebSocketData.GAME_QUESTIONS?.[0];
   send('QUESTION_ANSWERED', {
     questionId: firstQ._id,
     answer: getCorrect(firstQ.answers)._id,

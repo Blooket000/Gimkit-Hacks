@@ -990,7 +990,7 @@
     };
 
     const answerClassicQuestion = () => {
-        const firstQ = WebSocketData.GAME_QUESTIONS?.[0];
+        const firstQ = WebSocketData.GAME_QUESTIONS?.[classic["Auto Answer Config"].elements["Question Index"].value] || WebSocketData.GAME_QUESTIONS?.[0];
         send('QUESTION_ANSWERED', {
             questionId: firstQ._id,
             answer: getCorrect(firstQ.answers)._id,
@@ -1740,7 +1740,6 @@
 
     const mode = () => { return WebSocketData.GAME_STATE.gameOptions.specialGameType[0]; };
     // needs modified to support 2D
-    document.body.style.background = "#4C1B81";
     window.addEventListener("load", _ => {
         render(classic);
     });
