@@ -39,7 +39,8 @@ The script must be executed before joining the game to receive the game state in
 - Of course, you can try to run the script from [output/main.js](output/main.js) in DevTools before the WebSocket is frozen
 ### UserScript
 - Pull the script from [output/main-userscript.user.js](output/main-userscript.user.js) and create a new UserScript in Tampermonkey/Greasemonkey or whatever extension you use for userscripts
-- The script should automatically bypass the WebSocket freeze requiring no new tabs being created
+  - Click [here](https://undercovergoose.github.io/gimkit/output/main-userscript.user.js) to install the script directly into your extension
+- The script should automaticallys bypass the WebSocket freeze requiring no new tabs being created
 
 ### CORS Bypass Required:
 <details>
