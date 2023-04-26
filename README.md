@@ -5,7 +5,7 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 <br>
 
 # Features
-- Auto updating bookmarklet requiring no Inspect Element or local override shenanigans
+- Auto updating userscript requiring no Inspect Element or local override shenanigans
 - Simple GUI to control mode-specific features ~~with support for binding keybinds~~
 - ~~Built-in game flooder and bot controller~~ (Coming soon)
 
@@ -25,6 +25,11 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
   - Automatically buys the next upgrade when possible with the ability to toggle upgrades to purchase
 - Set Claps
   - Adds any amount of claps, including negative numbers, to the counter when the game has finished
+- Buy & Use Powerups
+  - Buy specific or all powerups through the GUI
+  - Use the powerups on yourself or others
+- Buy & Apply Themes
+  - Buy specific or all themes and apply them
 
 </details>
 <details>
@@ -54,7 +59,7 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 
 # Usage
 The script must be executed before joining the game to receive the game state information. As Gimkit now freezes the WebSocket prototype when the page loads, the script will automatically open a new window with the script executing before the page loads bypassing the freeze.
-- Of course, you can try to run the script from [output/main.js](output/main.js) in DevTools before the WebSocket is frozen
+- Of course, you can try to run the script from [output/bundle.js](output/bundle.js) in DevTools before the WebSocket is frozen
 ### UserScript (Recommended)
 - Pull the script from [output/main-userscript.user.js](output/main-userscript.user.js) and create a new UserScript in Tampermonkey/Greasemonkey or whatever extension you use for userscripts
   - Click [here](https://undercovergoose.github.io/gimkit/output/main-userscript.user.js) to install the script directly into your extension
@@ -67,7 +72,7 @@ The script must be executed before joining the game to receive the game state in
 > Paste the following into developer console:
 ```javascript
 (async() => {
-	const r = await fetch("https://undercovergoose.github.io/gimkit/output/main-minified.js");
+	const r = await fetch("https://undercovergoose.github.io/gimkit/output/bundle.min.js");
 	const t = await r.text();
 	const w = window.open(location.href, "_blank");
 	w.eval(t);
@@ -76,10 +81,10 @@ The script must be executed before joining the game to receive the game state in
 ```
 > or create a bookmarklet with the following url and press to launch:
 ```javascript
-javascript:(async()=>{const r=await fetch("https://undercovergoose.github.io/gimkit/output/main-minified.js");const t=await r.text();const w=window.open(location.href,"_blank");w.eval(t);w.focus();})();void 0
+javascript:(async()=>{const r=await fetch("https://undercovergoose.github.io/gimkit/output/bundle.min.js");const t=await r.text();const w=window.open(location.href,"_blank");w.eval(t);w.focus();})();void 0
 ```
 
 </details>
 
 ### Running from Source
-If you wish to clone the repo and run the script directly from the output folder you can do so by hosting a file server on some port to the repo and changing the URL in the script to `127.0.0.1:8080/output/main-minified.js` replacing the port with the one you are using.
+If you wish to clone the repo and run the script directly from the output folder you can do so by hosting a file server on some port to the repo and changing the URL in the script to `127.0.0.1:8080/output/bundle.min.js` replacing the port with the one you are using.
