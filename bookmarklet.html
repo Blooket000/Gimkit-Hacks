@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimkit Utility Bookmarklet</title>
+    <style>
+      * {
+        font-family: Arial;
+      }
+      textarea#script {
+        resize: none;
+        width: calc(100vw - 25px);
+        height: 100px;
+      }
+      a {
+        color: black !important;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Raw Bookmarklet:</h3>
+    <textarea id="script" readonly></textarea>
+    <h3><a href="">Drag Me to your bookmarks bar</a></h3>
+    <script>
+      (async() => {
+        const res = await fetch("https://undercovergoose.github.io/gimkit/output/bundle.min.js");
+        const txt = (await res.text()).replaceAll("`", "\\`").replaceAll("${", "\\${");
+        const bookmarklet = `javascript:(()=>{const r=window.open(location.href,"_blank");r.eval(\`${txt}\`);r.focus();})();void 0;`;
+        document.querySelector("#script").innerHTML = bookmarklet;
+        document.querySelector("a").href = bookmarklet;
+      })();
+    </script>
+  </body>
+</html>

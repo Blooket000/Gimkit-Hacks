@@ -65,7 +65,11 @@ The script must be executed before joining the game to receive the game state in
   - Click [here](https://undercovergoose.github.io/gimkit/output/main-userscript.user.js) to install the script directly into your extension
 - The script should automaticallys bypass the WebSocket freeze requiring no new tabs being created
 
-### CORS Bypass Required:
+### Bookmarklet
+- Visit [bookmarklet.html](https://undercovergoose.github.io/gimkit/bookmarklet.html) and drag the "Drag Me" link into your bookmarks bar
+- Click the bookmark when you are on gimkit.com/join and the opened tab will be running the script
+
+### Auto Updating Bookmarks (CORS Bypass Required):
 <details>
   <summary>These scripts require CORS to be disabled in your browser</summary>
 
@@ -84,7 +88,7 @@ The script must be executed before joining the game to receive the game state in
 javascript:(async()=>{const r=await fetch("https://undercovergoose.github.io/gimkit/output/bundle.min.js");const t=await r.text();const w=window.open(location.href,"_blank");w.eval(t);w.focus();})();void 0
 ```
 
-</details>
-
 ### Running from Source
 If you wish to clone the repo and run the script directly from the output folder you can do so by hosting a file server on some port to the repo and changing the URL in the script to `127.0.0.1:8080/output/bundle.min.js` replacing the port with the one you are using.
+
+</details>
