@@ -4,10 +4,12 @@ import defaultOptions from './modes/default';
 import pardyOptions from './modes/pardy';
 import imposterOptions from './modes/imposter';
 import infinityOptions from './modes/infinity';
+import hiddenOptions from './modes/hidden';
 import { getCorrect } from './parsers/answer';
 import { encode as blueboatEncode, decode as blueboatDecode } from './parsers/blueboat';
-import { navId, render } from './navigator/navigator';
+import { navId, widgetId, render } from './navigator/navigator';
 import { sendChannel as keybindsSendChannel } from './keybinds';
+import Widget from "./navigator/widget";
 
 export const mode = () => { return WebSocketData.GAME_STATE!.gameOptions.specialGameType[0] };
 // needs modified to support 2D
@@ -21,15 +23,18 @@ window.addEventListener("load", _ => {
 // window.encode = blueboatEncode;
 // window.wsdata = WebSocketData;
 // window.render = render;
+window.widgetClass = Widget;
 
 websocketSendChannel.addEventListener('GAME_STATE', (e: Event) => {
   const data = (e as CustomEvent).detail;
   switch(mode()) {
     case "CLASSIC":
     case "RICH":
-    case "HIDDEN":
     case "DRAINED":
       render(classicOptions);
+      break;
+    case "HIDDEN":
+      render(hiddenOptions);
       break;
     case "PARDY":
       render(pardyOptions);
@@ -51,7 +56,7 @@ keybindsSendChannel.addEventListener("KEYBIND", (e: Event) => {
 
 setInterval(() => {
   Array.from(document.body.children ?? []).forEach(e => {
-    if(e.id === navId) return;
+    if(e.id === navId || e.className === widgetId) return;
     (e as HTMLDivElement).style.zIndex = "10";
   });
 }, 200);

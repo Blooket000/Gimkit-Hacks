@@ -98,9 +98,9 @@ export const build = {
     style.id = styleId;
     style.innerHTML = ` @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap'); @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
   #${navId}, .${widgetId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'Baloo 2', cursive;border-radius: 3px;font-size: 19px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
-  .${widgetId} {width:200px;height:fit-content;}
+  .${widgetId} {width:220px;height:fit-content;}
   #${navId}::-webkit-scrollbar {display: none;}
-  #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass}, .${widgetId} span[data-key] {display: block;width: 100%;height: 40px;line-height: 40px;color: white;}
+  #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass}, .${widgetId} span[data-key] {display: block;width: 100%;height: 40px;line-height: 40px;color: white;text-align:center;}
   #${navId} .${buttonClass}.${disabledClass} {cursor:not-allowed !important;}
   #${navId} .${buttonClass}.${disabledClass} span {color:#444 !important;}
   #${navId} span.${fullClass}, .${widgetId} .${widgetTitle} {text-align: center;display:block;border-bottom-style: solid;border-bottom-width: 3px;animation: 7s infinite rainbowBC, 7s infinite rainbowC;}

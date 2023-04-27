@@ -1123,12 +1123,13 @@
             const style = document.createElement("style");
             style.id = styleId;
             style.innerHTML = ` @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap'); @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
-  #${navId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'Baloo 2', cursive;border-radius: 3px;font-size: 19px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
+  #${navId}, .${widgetId} {position: fixed;width: 280px;height: 500px;background: #00000090;font-family: 'Baloo 2', cursive;border-radius: 3px;font-size: 19px;user-select: none;overflow-y: scroll;-ms-overflow-style: none;scrollbar-width: none;overscroll-behavior-y: none;z-index: 99999;}
+  .${widgetId} {width:220px;height:fit-content;}
   #${navId}::-webkit-scrollbar {display: none;}
-  #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass} {display: block;width: 100%;height: 40px;line-height: 40px;color: white;}
+  #${navId} .${fullClass}, #${navId} .${optionClass}, #${navId} .${collapseClass}, .${widgetId} span[data-key] {display: block;width: 100%;height: 40px;line-height: 40px;color: white;text-align:center;}
   #${navId} .${buttonClass}.${disabledClass} {cursor:not-allowed !important;}
   #${navId} .${buttonClass}.${disabledClass} span {color:#444 !important;}
-  #${navId} span.${fullClass} {text-align: center;border-bottom-style: solid;border-bottom-width: 3px;animation: 7s infinite rainbowBC, 7s infinite rainbowC;}
+  #${navId} span.${fullClass}, .${widgetId} .${widgetTitle} {text-align: center;display:block;border-bottom-style: solid;border-bottom-width: 3px;animation: 7s infinite rainbowBC, 7s infinite rainbowC;}
   #${navId} .${optionClass} {position: relative;transition: 0.3s background;}
   #${navId} .${optionClass} span:first-child {color: white;transition: 0.2s color;padding-left: 20px;}
   #${navId} .${collapseClass} {transition: 0.3s height;}
@@ -1137,7 +1138,7 @@
   #${navId} .${optionClass}.${toggleClass}.${disabledClass} span:first-child {color: #f00a;}
   #${navId} .${optionClass}.${toggleClass}.${enabledClass} span:first-child {color: #1f0e;}
   #${navId} .${optionClass}:hover, #${navId} .${collapseClass}:hover {background: #ffffff20;cursor: pointer;}
-  #${navId} .${dragbarClass}:hover {cursor: move;}
+  #${navId} .${dragbarClass}:hover, .${widgetId} .${widgetTitle}:hover {cursor: move;}
   #${navId} .${optionClass} span.${keyClass} {position: absolute;display: block;right: 0px;top: 0px;width: 40px;color: white;background: #ffffff10;text-align: center;margin-right: 7px;}
   #${navId} .${optionClass} span.${keyClass}[keybind-key=""] {color: #00000050;}
   #${navId} .${collapseClass} span.${arrowClass} {display: inline-block;width: 40px;text-align: center;transition: 0.2s transform;font-family: 'Righteous', cursive;}
@@ -1279,7 +1280,7 @@
         }
     };
 
-    const [navId, selectId, styleId, widgetId] = randomIds(4);
+    const [navId, selectId, styleId, widgetId, widgetTitle] = randomIds(5);
     const pos = [0, 0, 0, 0, false];
     const kc = {
         pinned: false,
@@ -2114,6 +2115,124 @@
         "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
     };
 
+    class Widget {
+        title;
+        element;
+        header;
+        offsetX = 0;
+        offsetY = 0;
+        pos = [0, 0, 0, 0, false];
+        constructor(title, elements) {
+            this.element = document.createElement("div");
+            this.element.className = widgetId;
+            this.element.style.top = "15px";
+            this.element.style.left = "15px";
+            this.title = title;
+            this.clearElements();
+            this.addElements(elements ?? {});
+            window.addEventListener("resize", this.windowResize.bind(this));
+            document.body.appendChild(this.element);
+        }
+        hide() {
+            this.element.style.display = "none";
+        }
+        show() {
+            this.element.style.display = "";
+        }
+        mouseDown(e) {
+            this.pos[2] = e.clientX;
+            this.pos[3] = e.clientY;
+            this.pos[4] = true;
+        }
+        mouseUp() {
+            this.pos[4] = false;
+        }
+        mouseMove(e) {
+            if (!this.pos[4])
+                return;
+            this.pos[0] = this.pos[2] - e.clientX;
+            this.pos[1] = this.pos[3] - e.clientY;
+            this.pos[2] = e.clientX;
+            this.pos[3] = e.clientY;
+            this.element.style.top = Math.max(-1 * this.offsetY, this.element.offsetTop - this.pos[1]) + "px";
+            this.element.style.left = Math.max(-1 * this.offsetX, this.element.offsetLeft - this.pos[0]) + "px";
+            this.windowResize();
+        }
+        windowResize() {
+            if (window.innerWidth - this.offsetX < parseInt(this.element.style.left) + this.element.offsetWidth)
+                this.element.style.left = "";
+            this.element.style.right = -1 * this.offsetX + "px";
+            if (window.innerHeight - this.offsetY < parseInt(this.element.style.top) + this.element.offsetHeight)
+                this.element.style.top = "";
+            this.element.style.bottom = -1 * this.offsetY + "px";
+        }
+        addElements(elements) {
+            for (const [key, text] of Object.entries(elements)) {
+                const span = document.createElement("span");
+                span.innerHTML = text;
+                span.setAttribute("data-key", key);
+                this.element.appendChild(span);
+            }
+        }
+        updateElements(elements) {
+            for (const [key, text] of Object.entries(elements)) {
+                const span = this.element.querySelector(`span[data-key="${key}"]`);
+                if (span)
+                    span.innerHTML = text;
+            }
+        }
+        removeElements(elements) {
+            for (const [key, text] of Object.entries(elements)) {
+                const span = this.element.querySelector(`span[data-key="${key}"]`);
+                if (span)
+                    span.remove();
+            }
+        }
+        clearElements() {
+            this.header = document.createElement("span");
+            this.header.className = widgetTitle;
+            this.header.innerHTML = this.title;
+            this.element.innerHTML = "";
+            this.element.appendChild(this.header);
+            window.addEventListener("mouseup", this.mouseUp.bind(this));
+            this.header.addEventListener("mousedown", this.mouseDown.bind(this));
+            window.addEventListener("mousemove", this.mouseMove.bind(this));
+        }
+        destroy() {
+            this.element.remove();
+            window.removeEventListener("mouseup", this.mouseUp.bind(this));
+            this.header.removeEventListener("mousedown", this.mouseDown.bind(this));
+            window.removeEventListener("mousemove", this.mouseMove.bind(this));
+            window.removeEventListener("resize", this.windowResize.bind(this));
+        }
+    }
+
+    const widgets = {};
+    const hidden = {
+        ...classic,
+        "Render Balance": {
+            type: "toggle", value: false,
+            action: async function () {
+                if (!widgets.balance) {
+                    widgets.balance = new Widget("Balance", {
+                        "balance": "$0"
+                    });
+                    widgets.balance.hide();
+                }
+                if (this.value)
+                    widgets.balance.show();
+                else
+                    widgets.balance.hide();
+                widgets.balance.updateElements({
+                    "balance": `$${(WebSocketData.BALANCE ?? 0).toLocaleString()}`
+                });
+                await sleep(50);
+                if (this.value)
+                    this.action.bind(this)();
+            }
+        }
+    };
+
     const mode = () => { return WebSocketData.GAME_STATE.gameOptions.specialGameType[0]; };
     // needs modified to support 2D
     Object.freeze = function (n) { return n; };
@@ -2124,14 +2243,17 @@
     // window.encode = blueboatEncode;
     // window.wsdata = WebSocketData;
     // window.render = render;
+    window.widgetClass = Widget;
     sendChannel$1.addEventListener('GAME_STATE', (e) => {
         e.detail;
         switch (mode()) {
             case "CLASSIC":
             case "RICH":
-            case "HIDDEN":
             case "DRAINED":
                 render(classic);
+                break;
+            case "HIDDEN":
+                render(hidden);
                 break;
             case "PARDY":
                 render(pardy);
@@ -2152,7 +2274,7 @@
     });
     setInterval(() => {
         Array.from(document.body.children ?? []).forEach(e => {
-            if (e.id === navId)
+            if (e.id === navId || e.className === widgetId)
                 return;
             e.style.zIndex = "10";
         });

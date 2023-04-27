@@ -30,6 +30,8 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
   - Use the powerups on yourself or others
 - Buy & Apply Themes
   - Buy specific or all themes and apply them
+- **Hidden Mode** - Show Balance
+  - Creates a widget on the screen displaying your balance
 
 </details>
 <details>
