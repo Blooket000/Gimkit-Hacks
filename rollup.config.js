@@ -27,7 +27,7 @@ export default {
         delimiters: ["", ""],
         values: {
           "!function": `\n/*\n${license}\n*/\n\n(function(){const s=function s`,
-          "({});": ";if(window._gutil)return;if(Object.isFrozen(WebSocket.prototype)){const w=window.open(location.href,'_blank');w._gutil=true;w.ssrc=s.toString();w.eval(s+';s({})');w.focus();}else s({});window._gutil=true})();"
+          "({});": ";if(window._gutil) {return s({});};if(Object.isFrozen(WebSocket.prototype)){const w=window.open(location.href,'_blank');w.Object.freeze=(n)=>n;w._gutil=true;w.ssrc=s.toString();w.eval(s+';s({})');w.focus();}else s({});window._gutil=true})();"
         }
       }), metablock({
         file: null,

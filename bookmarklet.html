@@ -9,9 +9,9 @@
       * {
         font-family: Arial;
       }
-      textarea#script {
+      textarea {
         resize: none;
-        width: calc(100vw - 25px);
+        width: calc(50vw - 25px);
         height: 100px;
       }
       a {
@@ -21,16 +21,25 @@
     </style>
   </head>
   <body>
-    <h3>Raw Bookmarklet:</h3>
-    <textarea id="script" readonly></textarea>
-    <h3><a href="">Drag Me to your bookmarks bar</a></h3>
+    <h3>Raw Bookmarklets:</h3>
+    <textarea id="scriptUno" readonly></textarea>
+    <textarea id="scriptDos" readonly></textarea>
+    <h3><a href="" id="uno">Bookmark 1: WebSocket Bypass (Drag Me)</a></h3>
+    <span>Open <a href="https://gimkit.com/join">https://gimkit.com/join</a> and then press the first bookmark. A new tab will open with the same URL.</span>
+    <h3><a href="" id="dos">Bookmark 2: Script Activator (Drag Me)</a></h3>
+    <span>Once the new tab is focused/opened, click the second script to activate the script.</span>
     <script>
       (async() => {
         const res = await fetch("https://undercovergoose.github.io/gimkit/output/bundle.min.js");
-        const txt = (await res.text()).replaceAll("`", "\\`").replaceAll("${", "\\${");
-        const bookmarklet = `javascript:(()=>{const r=window.open(location.href,"_blank");r.eval(\`${txt}\`);r.focus();})();void 0;`;
-        document.querySelector("#script").innerHTML = bookmarklet;
-        document.querySelector("a").href = bookmarklet;
+
+        const uno = `javascript:(()=>{const w = window.open(location.href);w.Object.freeze = (n) => n;w.focus();})();void 0`;
+        const dos = `javascript:${await res.text()};void 0`;
+        // const txt = ori.replaceAll("`", "\\`").replaceAll("${", "\\${");
+        // const bookmarklet = `javascript:(()=>{const r=window.open("https://gimkit.com/join","_blank");r.Object.freeze=function(n){return n};r._gfunc=${ori.replace("({});",";").slice(1)};r._gfunc({});r.focus();})();void 0;`;
+        document.querySelector("#scriptUno").innerHTML = uno;
+        document.querySelector("#uno").href = uno;
+        document.querySelector("#scriptDos").innerHTML = dos;
+        document.querySelector("#dos").href = dos;
       })();
     </script>
   </body>

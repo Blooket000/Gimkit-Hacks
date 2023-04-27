@@ -74,9 +74,10 @@ The script must be executed before joining the game to receive the game state in
   - Click [here](https://undercovergoose.github.io/gimkit/output/main-userscript.user.js) to install the script directly into your extension
 - The script should automaticallys bypass the WebSocket freeze requiring no new tabs being created
 
-### Bookmarklet
-- Visit [bookmarklet.html](https://undercovergoose.github.io/gimkit/bookmarklet.html) and drag the "Drag Me" link into your bookmarks bar
-- Click the bookmark when you are on gimkit.com/join and the opened tab will be running the script
+### Bookmarklet (2 Step Process)
+- Visit [bookmarklet.html](https://undercovergoose.github.io/gimkit/bookmarklet.html) and drag both links to your bookmarks bar
+- Navigate to https://gimkit.com/join and press the first script, then press the second script on the tab opened
+- You'll know if the script worked if the default right-click context menu doesn't appear
 
 ### Auto Updating Bookmarks (CORS Bypass Required):
 <details>

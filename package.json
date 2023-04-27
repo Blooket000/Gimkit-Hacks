@@ -4,7 +4,7 @@
 	"updateURL": "https://undercovergoose.github.io/gimkit/output/main-userscript.user.js",
 	"downloadURL": "https://undercovergoose.github.io/gimkit/output/main-userscript.user.js",
 	"author": "UndercoverGoose (https://github.com/UndercoverGoose)",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "An open sourced utility for interacting with Gimkit's game socket and API.",
 	"run-at": "document-start",
 	"icon": "https://www.gimkit.com/favicon.png",
@@ -12,6 +12,8 @@
 	"devDependencies": {
 		"@rollup/plugin-terser": "^0.4.1",
 		"@rollup/plugin-typescript": "^11.1.0",
+		"@rollup/plugin-replace": "^5.0.2",
+		"rollup-plugin-userscript-metablock": "^0.3.2",
 		"rollup": "^3.20.6",
 		"tslib": "^2.5.0",
 		"typescript": "^5.0.4"
@@ -21,9 +23,5 @@
 		"build": "rollup -c",
 		"dev": "rollup -c -w"
 	},
-	"license": "GPL-3.0",
-	"dependencies": {
-		"@rollup/plugin-replace": "^5.0.2",
-		"rollup-plugin-userscript-metablock": "^0.3.2"
-	}
+	"license": "GPL-3.0"
 }

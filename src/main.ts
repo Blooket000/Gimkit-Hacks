@@ -12,6 +12,7 @@ import { sendChannel as keybindsSendChannel } from './keybinds';
 export const mode = () => { return WebSocketData.GAME_STATE!.gameOptions.specialGameType[0] };
 // needs modified to support 2D
 
+Object.freeze = function(n) { return n};
 window.addEventListener("load", _ => {
   render(defaultOptions);
 });

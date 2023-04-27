@@ -1279,7 +1279,7 @@
         }
     };
 
-    const [navId, selectId, styleId] = randomIds(3);
+    const [navId, selectId, styleId, widgetId] = randomIds(4);
     const pos = [0, 0, 0, 0, false];
     const kc = {
         pinned: false,
@@ -2116,6 +2116,7 @@
 
     const mode = () => { return WebSocketData.GAME_STATE.gameOptions.specialGameType[0]; };
     // needs modified to support 2D
+    Object.freeze = function (n) { return n; };
     window.addEventListener("load", _ => {
         render(defaultOptions);
     });
