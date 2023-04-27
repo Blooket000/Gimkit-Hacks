@@ -4,7 +4,7 @@ import { NavHeader, NavToggle, NavButton, NavCollapse, NavSlider, NavItem, Toggl
 import { build } from "./build";
 import { closeUI as closeSelectUI } from "./select";
 
-const [ navId, selectId, styleId ] = randomIds(3);
+const [ navId, selectId, styleId, widgetId, widgetTitle ] = randomIds(5);
 const pos: [number, number, number, number, boolean] = [0, 0, 0, 0, false];
 const kc = {
   pinned: false,
@@ -12,7 +12,7 @@ const kc = {
   boundKey: (key: string) => {}
 }
 let scale = 1, offsetX = 0, offsetY = 0, renderData: ToggleList = {};
-export { navId, selectId, styleId, kc, renderData };
+export { navId, selectId, styleId, widgetId, widgetTitle, kc, renderData };
 
 export const render = (options: ToggleList) => {
   renderData = options;
