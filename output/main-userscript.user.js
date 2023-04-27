@@ -4,6 +4,7 @@
 // @namespace   http://github.com/UndercoverGoose/gimkit
 // @updateURL   https://undercovergoose.github.io/gimkit/output/main-userscript.user.js
 // @downloadURL https://undercovergoose.github.io/gimkit/output/main-userscript.user.js
+// @supportURL  https://github.com/UndercoverGoose/gimkit/issues
 // @author      UndercoverGoose (https://github.com/UndercoverGoose)
 // @version     0.0.9
 // @run-at      document-start
