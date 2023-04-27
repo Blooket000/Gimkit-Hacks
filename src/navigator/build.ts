@@ -35,6 +35,7 @@ export const build = {
   toggle: (key: string, data: NavToggle) => {
     const element = document.createElement("div");
     element.className = `${optionClass} ${toggleClass} ` + (data.value ? enabledClass : disabledClass);
+    data.onKeybind = () => element.className = `${optionClass} ${toggleClass} ` + (data.value ? enabledClass : disabledClass);
     element.setAttribute("keybind", data.keybindId ?? "");
     const label = document.createElement("span");
     label.textContent = key;
@@ -147,7 +148,7 @@ export const build = {
   elements: (options: ToggleList, firstHeader = false, parentReference?: ToggleList | NavCollapse, parentKey?: string) => {
     const elements: (HTMLSpanElement | HTMLDivElement)[] = [];
     for(const [key, data] of Object.entries(options)) {
-      switch(data.type) {
+      switch(data?.type ?? "") {
         case "header": {
           const element = document.createElement("span");
           element.className = `${fullClass} ${dragbarClass}`;

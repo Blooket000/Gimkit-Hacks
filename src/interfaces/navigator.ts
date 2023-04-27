@@ -6,6 +6,7 @@ export type NavToggle = {
   value: boolean;
   key?: string;
   keybindId?: string;
+  onKeybind?: () => void;
   action?: () => void | Promise<void>;
 }
 export type NavButton = {

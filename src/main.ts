@@ -3,6 +3,7 @@ import classicOptions from './modes/classic';
 import defaultOptions from './modes/default';
 import pardyOptions from './modes/pardy';
 import imposterOptions from './modes/imposter';
+import infinityOptions from './modes/infinity';
 import { getCorrect } from './parsers/answer';
 import { encode as blueboatEncode, decode as blueboatDecode } from './parsers/blueboat';
 import { navId, render } from './navigator/navigator';
@@ -12,7 +13,7 @@ export const mode = () => { return WebSocketData.GAME_STATE!.gameOptions.special
 // needs modified to support 2D
 
 window.addEventListener("load", _ => {
-  render(classicOptions);
+  render(defaultOptions);
 });
 
 // window.decode = blueboatDecode;
@@ -24,6 +25,9 @@ websocketSendChannel.addEventListener('GAME_STATE', (e: Event) => {
   const data = (e as CustomEvent).detail;
   switch(mode()) {
     case "CLASSIC":
+    case "RICH":
+    case "HIDDEN":
+    case "DRAINED":
       render(classicOptions);
       break;
     case "PARDY":
@@ -31,6 +35,9 @@ websocketSendChannel.addEventListener('GAME_STATE', (e: Event) => {
       break;
     case "IMPOSTER":
       render(imposterOptions);
+      break;
+    case "THANOS":
+      render(infinityOptions);
       break;
     default:
       render(classicOptions);

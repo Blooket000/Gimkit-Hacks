@@ -13,7 +13,7 @@ export const answerClassicQuestion = () => {
     answer: getCorrect(firstQ.answers)._id,
   });
 };
-const buyPowerup = (id: string) => {
+export const buyPowerup = (id: string) => {
   send("POWERUP_PURCHASED", id);
 }
 const usePowerup = async(id: string) => {
@@ -455,6 +455,7 @@ const checkNavItem = (item: NavItem, keybindId: string) => {
     if(item.keybindId === keybindId) {
       if(item.type === "toggle") item.value = !item.value;
       if((item as NavToggle).value !== false) item.action?.();
+      (item as NavToggle).onKeybind?.();
       return true;
     }
   }

@@ -43,11 +43,19 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 <details>
   <summary>Trust No One</summary>
 
-- Auto Answer, Answer Once, Highlight/Input/Hidden Answers & Set Claps (see **Classic**)
+- All Classic Features (see **Classic**)
 - Purchase Shop Items
   - Buy the items from anywhere and even use them on yourself
 - Spam Host
   - Spams the investigation log on the host with yourself purchasing Money Per Question :rofl:
+
+</details>
+<details>
+  <summary>Infinity Mode</summary>
+
+- All Classic Features (see **Classic**)
+- Purchase & Use Infinity Stones
+  - Buy and use the infinity stones from anywhere
 
 </details>
 
@@ -60,6 +68,7 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 # Usage
 The script must be executed before joining the game to receive the game state information. As Gimkit now freezes the WebSocket prototype when the page loads, the script will automatically open a new window with the script executing before the page loads bypassing the freeze.
 - Of course, you can try to run the script from [output/bundle.js](output/bundle.js) in DevTools before the WebSocket is frozen
+
 ### UserScript (Recommended)
 - Pull the script from [output/main-userscript.user.js](output/main-userscript.user.js) and create a new UserScript in Tampermonkey/Greasemonkey or whatever extension you use for userscripts
   - Click [here](https://undercovergoose.github.io/gimkit/output/main-userscript.user.js) to install the script directly into your extension

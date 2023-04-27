@@ -1054,6 +1054,7 @@
         toggle: (key, data) => {
             const element = document.createElement("div");
             element.className = `${optionClass} ${toggleClass} ` + (data.value ? enabledClass : disabledClass);
+            data.onKeybind = () => element.className = `${optionClass} ${toggleClass} ` + (data.value ? enabledClass : disabledClass);
             element.setAttribute("keybind", data.keybindId ?? "");
             const label = document.createElement("span");
             label.textContent = key;
@@ -1173,7 +1174,7 @@
         elements: (options, firstHeader = false, parentReference, parentKey) => {
             const elements = [];
             for (const [key, data] of Object.entries(options)) {
-                switch (data.type) {
+                switch (data?.type ?? "") {
                     case "header": {
                         const element = document.createElement("span");
                         element.className = `${fullClass} ${dragbarClass}`;
@@ -1865,6 +1866,24 @@
         // }
     };
 
+    var defaultOptions = {
+        "Default": {
+            type: "header"
+        },
+        // "Hold key to open GUI": {
+        //   type: "toggle",
+        //   value: false
+        // },
+        // "Close GUI when button pressed": {
+        //   type: "toggle",
+        //   value: false
+        // },
+        // "Anti REDBOAT": {
+        //   type: "toggle",
+        //   value: true
+        // }
+    };
+
     const pardy = {
         "Answers": classic["Answers"],
         "Auto Answer": {
@@ -2014,10 +2033,91 @@
         // "Kick Player": classic["Kick Player"]
     };
 
+    const infinityMode = {
+        "Answers": classic["Answers"],
+        "Auto Answer": classic["Auto Answer"],
+        "Auto Answer Config": classic["Auto Answer Config"],
+        "Answer Correctly Once": classic["Answer Correctly Once"],
+        "Highlight Answer": classic["Highlight Answer"],
+        "Input Answer": classic["Input Answer"],
+        "Upgrades": classic["Upgrades"],
+        "Auto Upgrade": classic["Auto Upgrade"],
+        "Auto Upgrade Config": classic["Auto Upgrade Config"],
+        "Items": {
+            type: "header"
+        },
+        "Buy All Items": {
+            type: "button",
+            action: async () => {
+                const el = infinityMode["Buy Specific Item"].elements;
+                for (const data of Object.values(el)) {
+                    data.action();
+                    await sleep(100);
+                }
+            }
+        },
+        "Buy Specific Item": {
+            type: "collapse", elements: {
+                "Soul Stone": {
+                    type: "button",
+                    condition: () => !WebSocketData.PURCHASED_POWERUPS?.includes("Soul Stone"),
+                    action: () => {
+                        buyPowerup("Soul Stone");
+                    }
+                },
+                "Time Stone": {
+                    type: "button",
+                    condition: () => !WebSocketData.PURCHASED_POWERUPS?.includes("Time Stone"),
+                    action: () => {
+                        buyPowerup("Time Stone");
+                    }
+                },
+                "Space Stone": {
+                    type: "button",
+                    condition: () => !WebSocketData.PURCHASED_POWERUPS?.includes("Space Stone"),
+                    action: () => {
+                        buyPowerup("Space Stone");
+                    }
+                },
+                "Mind Stone": {
+                    type: "button",
+                    condition: () => !WebSocketData.PURCHASED_POWERUPS?.includes("Mind Stone"),
+                    action: () => {
+                        buyPowerup("Mind Stone");
+                    }
+                },
+                "Reality Stone": {
+                    type: "button",
+                    condition: () => !WebSocketData.PURCHASED_POWERUPS?.includes("Reality Stone"),
+                    action: () => {
+                        buyPowerup("Reality Stone");
+                    }
+                },
+                "Power Stone": {
+                    type: "button",
+                    condition: () => !WebSocketData.PURCHASED_POWERUPS?.includes("Power Stone"),
+                    action: () => {
+                        buyPowerup("Power Stone");
+                    }
+                }
+            }
+        },
+        "Use Specific Item": classic["Use Specific Powerup"],
+        "Powerups": classic["Powerups"],
+        "Buy All Powerups": classic["Buy All Powerups"],
+        "Buy Specific Powerup": classic["Buy Specific Powerup"],
+        "Use Specific Powerup": classic["Use Specific Powerup"],
+        "Themes": classic["Themes"],
+        "Buy All Themes": classic["Buy All Themes"],
+        "Set Specific Theme": classic["Set Specific Theme"],
+        "Misc": classic["Misc"],
+        "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
+    };
+
     const mode = () => { return WebSocketData.GAME_STATE.gameOptions.specialGameType[0]; };
     // needs modified to support 2D
     window.addEventListener("load", _ => {
-        render(classic);
+        render(defaultOptions);
     });
     // window.decode = blueboatDecode;
     // window.encode = blueboatEncode;
@@ -2027,6 +2127,9 @@
         e.detail;
         switch (mode()) {
             case "CLASSIC":
+            case "RICH":
+            case "HIDDEN":
+            case "DRAINED":
                 render(classic);
                 break;
             case "PARDY":
@@ -2034,6 +2137,9 @@
                 break;
             case "IMPOSTER":
                 render(imposter);
+                break;
+            case "THANOS":
+                render(infinityMode);
                 break;
             default:
                 render(classic);
