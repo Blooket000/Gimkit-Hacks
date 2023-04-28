@@ -32,7 +32,7 @@
       (async() => {
         const res = await fetch("https://undercovergoose.github.io/gimkit/output/bundle.min.js");
 
-        const uno = `javascript:(()=>{const w = window.open(location.href);w.Object.freeze = (n) => n;w.focus();})();void 0`;
+        const uno = `javascript:(()=>{const w=window.open(location.href);w.Object.freeze=n=>{if(n.constructor?.name==="WebSocket")return n;return Object.freeze(n)};w.Object.isFrozen=_=>true;w.focus();})();void 0`;
         const dos = `javascript:${await res.text()};void 0`;
         // const txt = ori.replaceAll("`", "\\`").replaceAll("${", "\\${");
         // const bookmarklet = `javascript:(()=>{const r=window.open("https://gimkit.com/join","_blank");r.Object.freeze=function(n){return n};r._gfunc=${ori.replace("({});",";").slice(1)};r._gfunc({});r.focus();})();void 0;`;

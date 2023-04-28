@@ -911,6 +911,7 @@
             return send2D(data);
         return oldSend.apply(this, arguments);
     };
+    WebSocket.prototype.send.toString = () => oldSend.toString();
 
     const sleep = (ms) => new Promise(res => setTimeout(res, ms));
     const randomId = () => "g_" + Date.now().toString(32) + "_" + Math.floor(Math.random() * 1e4).toString(32);
@@ -1927,6 +1928,99 @@
         // "Kick Player": classic["Kick Player"]
     };
 
+    class Widget {
+        title;
+        element;
+        header;
+        offsetX = 0;
+        offsetY = 0;
+        pos = [0, 0, 0, 0, false];
+        constructor(title, elements) {
+            this.element = document.createElement("div");
+            this.element.className = widgetId;
+            this.element.style.top = "15px";
+            this.element.style.left = "15px";
+            this.title = title;
+            this.clearElements();
+            this.addElements(elements ?? {});
+            window.addEventListener("resize", this.windowResize.bind(this));
+            document.body.appendChild(this.element);
+        }
+        hide() {
+            this.element.style.display = "none";
+        }
+        show() {
+            this.element.style.display = "";
+        }
+        mouseDown(e) {
+            this.pos[2] = e.clientX;
+            this.pos[3] = e.clientY;
+            this.pos[4] = true;
+        }
+        mouseUp() {
+            this.pos[4] = false;
+        }
+        mouseMove(e) {
+            if (!this.pos[4])
+                return;
+            this.pos[0] = this.pos[2] - e.clientX;
+            this.pos[1] = this.pos[3] - e.clientY;
+            this.pos[2] = e.clientX;
+            this.pos[3] = e.clientY;
+            this.element.style.top = Math.max(-1 * this.offsetY, this.element.offsetTop - this.pos[1]) + "px";
+            this.element.style.left = Math.max(-1 * this.offsetX, this.element.offsetLeft - this.pos[0]) + "px";
+            this.windowResize();
+        }
+        windowResize() {
+            if (window.innerWidth - this.offsetX < parseInt(this.element.style.left) + this.element.offsetWidth)
+                this.element.style.left = "";
+            this.element.style.right = -1 * this.offsetX + "px";
+            if (window.innerHeight - this.offsetY < parseInt(this.element.style.top) + this.element.offsetHeight)
+                this.element.style.top = "";
+            this.element.style.bottom = -1 * this.offsetY + "px";
+        }
+        addElements(elements) {
+            for (const [key, text] of Object.entries(elements)) {
+                const span = document.createElement("span");
+                span.innerHTML = text;
+                span.setAttribute("data-key", key);
+                this.element.appendChild(span);
+            }
+        }
+        updateElements(elements) {
+            for (const [key, text] of Object.entries(elements)) {
+                const span = this.element.querySelector(`span[data-key="${key}"]`);
+                if (span)
+                    span.innerHTML = text;
+            }
+        }
+        removeElements(elements) {
+            for (const [key, text] of Object.entries(elements)) {
+                const span = this.element.querySelector(`span[data-key="${key}"]`);
+                if (span)
+                    span.remove();
+            }
+        }
+        clearElements() {
+            this.header = document.createElement("span");
+            this.header.className = widgetTitle;
+            this.header.innerHTML = this.title;
+            this.element.innerHTML = "";
+            this.element.appendChild(this.header);
+            window.addEventListener("mouseup", this.mouseUp.bind(this));
+            this.header.addEventListener("mousedown", this.mouseDown.bind(this));
+            window.addEventListener("mousemove", this.mouseMove.bind(this));
+        }
+        destroy() {
+            this.element.remove();
+            window.removeEventListener("mouseup", this.mouseUp.bind(this));
+            this.header.removeEventListener("mousedown", this.mouseDown.bind(this));
+            window.removeEventListener("mousemove", this.mouseMove.bind(this));
+            window.removeEventListener("resize", this.windowResize.bind(this));
+        }
+    }
+
+    const widgets$1 = {};
     const buyItem = async (itemId, targetted) => {
         if (targetted) {
             if (!WebSocketData.IMPOSTER_MODE_PEOPLE) {
@@ -1955,7 +2049,21 @@
         },
         "Reveal Imposters": {
             type: "toggle", value: false,
-            action: () => { }
+            action: async function () {
+                const imposterArray = Object.fromEntries(WebSocketData.IMPOSTER_MODE_PEOPLE?.filter(p => p.role === "imposter").map(p => [p.id, p.name]) ?? []);
+                if (!widgets$1.imposters) {
+                    widgets$1.imposters = new Widget("Imposters", imposterArray);
+                    widgets$1.imposters.hide();
+                }
+                if (this.value)
+                    widgets$1.imposters.show();
+                else
+                    widgets$1.imposters.hide();
+                widgets$1.imposters.updateElements(imposterArray);
+                await sleep(50);
+                if (this.value)
+                    this.action.bind(this)();
+            }
         },
         "Purchase Item": {
             type: "collapse", elements: {
@@ -2115,98 +2223,6 @@
         "Set Claps (Endgame)": classic["Set Claps (Endgame)"],
     };
 
-    class Widget {
-        title;
-        element;
-        header;
-        offsetX = 0;
-        offsetY = 0;
-        pos = [0, 0, 0, 0, false];
-        constructor(title, elements) {
-            this.element = document.createElement("div");
-            this.element.className = widgetId;
-            this.element.style.top = "15px";
-            this.element.style.left = "15px";
-            this.title = title;
-            this.clearElements();
-            this.addElements(elements ?? {});
-            window.addEventListener("resize", this.windowResize.bind(this));
-            document.body.appendChild(this.element);
-        }
-        hide() {
-            this.element.style.display = "none";
-        }
-        show() {
-            this.element.style.display = "";
-        }
-        mouseDown(e) {
-            this.pos[2] = e.clientX;
-            this.pos[3] = e.clientY;
-            this.pos[4] = true;
-        }
-        mouseUp() {
-            this.pos[4] = false;
-        }
-        mouseMove(e) {
-            if (!this.pos[4])
-                return;
-            this.pos[0] = this.pos[2] - e.clientX;
-            this.pos[1] = this.pos[3] - e.clientY;
-            this.pos[2] = e.clientX;
-            this.pos[3] = e.clientY;
-            this.element.style.top = Math.max(-1 * this.offsetY, this.element.offsetTop - this.pos[1]) + "px";
-            this.element.style.left = Math.max(-1 * this.offsetX, this.element.offsetLeft - this.pos[0]) + "px";
-            this.windowResize();
-        }
-        windowResize() {
-            if (window.innerWidth - this.offsetX < parseInt(this.element.style.left) + this.element.offsetWidth)
-                this.element.style.left = "";
-            this.element.style.right = -1 * this.offsetX + "px";
-            if (window.innerHeight - this.offsetY < parseInt(this.element.style.top) + this.element.offsetHeight)
-                this.element.style.top = "";
-            this.element.style.bottom = -1 * this.offsetY + "px";
-        }
-        addElements(elements) {
-            for (const [key, text] of Object.entries(elements)) {
-                const span = document.createElement("span");
-                span.innerHTML = text;
-                span.setAttribute("data-key", key);
-                this.element.appendChild(span);
-            }
-        }
-        updateElements(elements) {
-            for (const [key, text] of Object.entries(elements)) {
-                const span = this.element.querySelector(`span[data-key="${key}"]`);
-                if (span)
-                    span.innerHTML = text;
-            }
-        }
-        removeElements(elements) {
-            for (const [key, text] of Object.entries(elements)) {
-                const span = this.element.querySelector(`span[data-key="${key}"]`);
-                if (span)
-                    span.remove();
-            }
-        }
-        clearElements() {
-            this.header = document.createElement("span");
-            this.header.className = widgetTitle;
-            this.header.innerHTML = this.title;
-            this.element.innerHTML = "";
-            this.element.appendChild(this.header);
-            window.addEventListener("mouseup", this.mouseUp.bind(this));
-            this.header.addEventListener("mousedown", this.mouseDown.bind(this));
-            window.addEventListener("mousemove", this.mouseMove.bind(this));
-        }
-        destroy() {
-            this.element.remove();
-            window.removeEventListener("mouseup", this.mouseUp.bind(this));
-            this.header.removeEventListener("mousedown", this.mouseDown.bind(this));
-            window.removeEventListener("mousemove", this.mouseMove.bind(this));
-            window.removeEventListener("resize", this.windowResize.bind(this));
-        }
-    }
-
     const widgets = {};
     const hidden = {
         ...classic,
@@ -2235,7 +2251,13 @@
 
     const mode = () => { return WebSocketData.GAME_STATE.gameOptions.specialGameType[0]; };
     // needs modified to support 2D
-    Object.freeze = function (n) { return n; };
+    Object._freeze = Object.freeze;
+    Object.freeze = (n) => {
+        if (n.constructor?.name === "WebSocket")
+            return n;
+        return Object._freeze(n); // prob crashes the client
+    };
+    Object.isFrozen = () => true;
     window.addEventListener("load", _ => {
         render(defaultOptions);
     });
@@ -2243,7 +2265,7 @@
     // window.encode = blueboatEncode;
     // window.wsdata = WebSocketData;
     // window.render = render;
-    window.widgetClass = Widget;
+    // window.widgetClass = Widget;
     sendChannel$1.addEventListener('GAME_STATE', (e) => {
         e.detail;
         switch (mode()) {
