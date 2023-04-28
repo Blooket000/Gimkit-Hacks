@@ -50,6 +50,8 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
   - Buy the items from anywhere and even use them on yourself
 - Spam Host
   - Spams the investigation log on the host with yourself purchasing Money Per Question :rofl:
+- Reveal Imposters
+  - Does exactly that: displays the imposters on your screen
 
 </details>
 <details>
@@ -70,11 +72,12 @@ An open sourced utility for interacting with Gimkit's game socket and API. The c
 # Usage
 The script must be executed before joining the game to receive the game state information. As Gimkit now freezes the WebSocket prototype when the page loads, the script will automatically open a new window with the script executing before the page loads bypassing the freeze.
 - Of course, you can try to run the script from [output/bundle.js](output/bundle.js) in DevTools before the WebSocket is frozen
+  - However, this will most likely not work because of Josh's anti-tamper measures with object freezing and prototypes
 
 ### UserScript (Recommended)
 - Pull the script from [output/main-userscript.user.js](output/main-userscript.user.js) and create a new UserScript in Tampermonkey/Greasemonkey or whatever extension you use for userscripts
   - Click [here](https://undercovergoose.github.io/gimkit/output/main-userscript.user.js) to install the script directly into your extension
-- The script should automaticallys bypass the WebSocket freeze requiring no new tabs being created
+- The script (should) automatically bypass the WebSocket freeze requiring no new tabs being created
 
 ### Bookmarklet (2 Step Process)
 - Visit [bookmarklet.html](https://undercovergoose.github.io/gimkit/bookmarklet.html) and drag both links to your bookmarks bar
