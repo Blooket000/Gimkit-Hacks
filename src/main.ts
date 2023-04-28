@@ -14,7 +14,12 @@ import Widget from "./navigator/widget";
 export const mode = () => { return WebSocketData.GAME_STATE!.gameOptions.specialGameType[0] };
 // needs modified to support 2D
 
-Object.freeze = function(n) { return n};
+Object._freeze = Object.freeze;
+Object.freeze = (n) => {
+  if(n.constructor?.name === "WebSocket") return n;
+  return Object._freeze(n); // prob crashes the client
+};
+Object.isFrozen = () => true;
 window.addEventListener("load", _ => {
   render(defaultOptions);
 });
@@ -23,7 +28,7 @@ window.addEventListener("load", _ => {
 // window.encode = blueboatEncode;
 // window.wsdata = WebSocketData;
 // window.render = render;
-window.widgetClass = Widget;
+// window.widgetClass = Widget;
 
 websocketSendChannel.addEventListener('GAME_STATE', (e: Event) => {
   const data = (e as CustomEvent).detail;

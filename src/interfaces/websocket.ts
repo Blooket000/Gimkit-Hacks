@@ -158,7 +158,7 @@ export type WSData = {
     balanceChangeIfCorrect: number;
     balanceChangeIfIncorrect: number;
   },
-  DISABLED_POWERUPS: string[];
+  DISABLED_POWERUPS?: string[];
   FULL_SCREEN_PLAYER_BLACK?: {
     on: boolean;
   };

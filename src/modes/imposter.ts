@@ -1,9 +1,12 @@
 import { WebSocketData, send } from '../websocket';
 import { build } from '../navigator/build';
 import { NavButton, ToggleList } from "../interfaces/navigator";
+import Widget from "../navigator/widget";
 import createSelectUI from "../navigator/select";
 import classic from "./classic";
 import { sleep } from '../helpers';
+
+const widgets : { [key: string]: Widget } = {};
 
 const buyItem = async(itemId: string, targetted?: boolean) => {
   if(targetted) {
@@ -35,7 +38,20 @@ const imposter = {
   },
   "Reveal Imposters": {
     type: "toggle", value: false,
-    action: () => {}
+    action: async function() {
+      const imposterArray = Object.fromEntries(WebSocketData.IMPOSTER_MODE_PEOPLE?.filter(p => p.role === "imposter").map(p => [p.id, p.name]) ?? []);
+      if(!widgets.imposters) {
+        widgets.imposters = new Widget("Imposters", imposterArray);
+        widgets.imposters.hide();
+      }
+      if(this.value) widgets.imposters.show();
+      else widgets.imposters.hide();
+
+      widgets.imposters.updateElements(imposterArray);
+
+      await sleep(50);
+      if (this.value) this.action.bind(this)();
+    }
   },
   "Purchase Item": {
     type: "collapse", elements: {

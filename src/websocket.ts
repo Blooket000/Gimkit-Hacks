@@ -75,7 +75,6 @@ const onMessage2D = (msg: any) => {
 }
 
 const oldSend = WebSocket.prototype.send;
-
 WebSocket.prototype.send = function(data) {
   console.warn("[S]", data);
   WebSocketData.ws = this;
@@ -86,3 +85,4 @@ WebSocket.prototype.send = function(data) {
 
   return oldSend.apply(this, arguments);
 }
+WebSocket.prototype.send.toString = () => oldSend.toString();
